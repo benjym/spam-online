@@ -13,11 +13,8 @@ fetchPyFile();
 
 let spinner = document.getElementById("spinner");
 let video = document.getElementById("video");
-let canvas3 = document.getElementById("live_view");
-let ctx3 = canvas3.getContext("2d");
-
-let imageData1 = null;
-let imageData2 = null;
+let live_view = document.getElementById("live_view");
+let live_view_ctx = live_view.getContext("2d");
 
 let renderer1, renderer2;
 let scene1, camera1;
@@ -28,7 +25,6 @@ let nx;
 let ny;
 let im1;
 let im2;
-let nodeSpacing = 32;
 let nDIC_x, nDIC_y;
 let nodePositions = [];
 let e_h = [];
@@ -39,12 +35,13 @@ let offscreenCtx;
 let pyodide;
 
 let params = {
-    arrow_scale: 10,
+    arrow_scale : 10,
+    nodeSpacing : 32,
 };
 
 function streamVideoToCanvas() {
     function drawFrame() {
-        ctx3.drawImage(video, 0, 0, nx, ny);
+        live_view_ctx.drawImage(video, 0, 0, nx, ny);
         requestAnimationFrame(drawFrame);
     }
     drawFrame();
@@ -57,9 +54,9 @@ navigator.mediaDevices.getUserMedia({ video: true })
         camera_settings.aspect_ratio = camera_settings.height / camera_settings.width;
 
         init_three();
-        init_pyodide();
-        canvas3.width = nx;
-        canvas3.height = ny;
+        // init_pyodide();
+        live_view.width = nx;
+        live_view.height = ny;
         video.addEventListener("play", streamVideoToCanvas);
     })
     .catch(err => console.error("Error accessing camera: ", err));
@@ -93,13 +90,13 @@ function init_three() {
 
     nx = 400;
     ny = nx * camera_settings.aspect_ratio;
-    nDIC_x = Math.floor(nx / nodeSpacing) - 1; // offset to account for the fact that the grid starts at half a nodeSpacing
-    nDIC_y = Math.floor(ny / nodeSpacing) - 1;
+    nDIC_x = Math.floor(nx / params.nodeSpacing) - 1; // offset to account for the fact that the grid starts at half a nodeSpacing
+    nDIC_y = Math.floor(ny / params.nodeSpacing) - 1;
     im1 = new Uint8ClampedArray(nx * ny * 4); // rgba
     im2 = new Uint8ClampedArray(nx * ny * 4); // rgba
     for (let i = 0; i < nDIC_x; i++) {
         for (let j = 0; j < nDIC_y; j++) {
-            nodePositions.push([0, nodeSpacing / 2 + i * nodeSpacing - nx / 2, nodeSpacing / 2 + j * nodeSpacing - ny / 2]);
+            nodePositions.push([0, params.nodeSpacing / 2 + i * params.nodeSpacing - nx / 2, params.nodeSpacing / 2 + j * params.nodeSpacing - ny / 2]);
             e_h.push(0);
             e_v.push(0);
         }
@@ -132,6 +129,23 @@ function init_three() {
 
     let gui = new GUI();
     gui.add(params, 'arrow_scale', 0, 1000).onChange(() => update_arrows());
+    // gui.add(params, 'nodeSpacing', 8, 128,1).onChange(() => {
+    //     nDIC_x = Math.floor(nx / params.nodeSpacing) - 1;
+    //     nDIC_y = Math.floor(ny / params.nodeSpacing) - 1;
+    //     nodePositions = [];
+    //     e_h = [];
+    //     e_v = [];
+    //     for (let i = 0; i < nDIC_x; i++) {
+    //         for (let j = 0; j < nDIC_y; j++) {
+    //             nodePositions.push([0, params.nodeSpacing / 2 + i * params.nodeSpacing - nx / 2, params.nodeSpacing / 2 + j * params.nodeSpacing - ny / 2]);
+    //             e_h.push(0);
+    //             e_v.push(0);
+    //         }
+    //     }
+    //     displacementArrows.clear();
+    //     generateArrows();
+    //     renderer2.render(scene2, camera2);
+    // });
 }
 
 
@@ -179,7 +193,7 @@ async function init_pyodide() {
     await micropip.install("http://localhost:8000/assets/spam-0.7.1.0-cp312-cp312-pyodide_2024_0_wasm32.whl");
     pyodide.globals.set('im1', im1);
     pyodide.globals.set('im2', im2);
-    pyodide.globals.set('nodeSpacing', nodeSpacing);
+    pyodide.globals.set('nodeSpacing', params.nodeSpacing);
     pyodide.globals.set('nx', nx);
     pyodide.globals.set('ny', ny);
     pyodide.ready = true;

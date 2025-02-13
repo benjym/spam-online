@@ -67,6 +67,11 @@ canvas {
     border-radius: 10px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
 }
+#live_view {
+    transform: rotateY(180deg);
+    -webkit-transform:rotateY(180deg); /* Safari and Chrome */
+    -moz-transform:rotateY(180deg); /* Firefox */
+}
 
 #loadingSpan {
     position: absolute;
