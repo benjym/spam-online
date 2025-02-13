@@ -54,7 +54,7 @@ navigator.mediaDevices.getUserMedia({ video: true })
         camera_settings.aspect_ratio = camera_settings.height / camera_settings.width;
 
         init_three();
-        // init_pyodide();
+        init_pyodide();
         live_view.width = nx;
         live_view.height = ny;
         video.addEventListener("play", streamVideoToCanvas);
