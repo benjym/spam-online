@@ -1,44 +1,42 @@
 <html>
+    <head>
+        <meta charset="utf-8" />
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/pyodide/v0.27.2/full/pyodide.js"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+        <script type="importmap">
+            {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.173.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.173.0/examples/jsm/"
+            }
+            }
+        </script>
+        <link rel="stylesheet" href="css/main.css">
+    </head>
 
-<head>
-    <meta charset="utf-8" />
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/pyodide/v0.27.2/full/pyodide.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <script type="importmap">
-        {
-          "imports": {
-            "three": "https://cdn.jsdelivr.net/npm/three@0.173.0/build/three.module.js",
-            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.173.0/examples/jsm/"
-          }
-        }
-      </script>
-    <link rel="stylesheet" href="css/main.css">
-</head>
+    <body>
+        <span id="loadingSpan">Loading...</span>
+        <div class="controls">
 
-<body>
-    <span id="loadingSpan">Loading...</span>
-    <div class="controls">
-        
-    </div>
-    <video id="video" width="512" height="256" autoplay style="display:none;"></video>
-    <div class="canvas-container">
-        <div class="box">
-            <canvas id="canvas1"></canvas>
-            <button id="capture1">Capture Image 1</button>
         </div>
-        <div class="box">
-            <div class="spinner" id="spinner"></div>
-            <canvas id="live_view"></canvas>
-            <span id="spacer">Live view</span>
+        <video id="video" width="512" height="256" autoplay style="display:none;"></video>
+        <div class="canvas-container">
+            <div class="box">
+                <canvas id="canvas1"></canvas>
+                <button id="capture1">Capture Image 1</button>
+            </div>
+            <div class="box">
+                <div class="spinner" id="spinner"></div>
+                <canvas id="live_view"></canvas>
+                <span id="spacer">Live view</span>
+            </div>
+            <div class="box">
+                <canvas id="canvas2"></canvas>
+                <button id="capture2">Capture Image 2</button>
+            </div>
         </div>
-        <div class="box">
-            <canvas id="canvas2"></canvas>
-            <button id="capture2">Capture Image 2</button>
-        </div>
-    </div>
-    <script type="module" src="js/2d_dic.js"></script>
-</body>
-
+        <script type="module" src="js/2d_dic.js"></script>
+    </body>
 </html>

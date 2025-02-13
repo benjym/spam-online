@@ -4,7 +4,12 @@ import { Line2 } from 'three/addons/lines/Line2.js';
 import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
 import { LineGeometry } from 'three/addons/lines/LineGeometry.js';
 
-let py_file = fetch("python/2d_dic.py").then(response => response.text());
+let py_file;
+async function fetchPyFile() {
+    const response = await fetch("python/2d_dic.py");
+    py_file = await response.text();
+}
+fetchPyFile();
 
 let spinner = document.getElementById("spinner");
 let video = document.getElementById("video");
@@ -70,6 +75,7 @@ document.getElementById('capture1').addEventListener('click', () => {
     renderer1.render(scene1, camera1);
 });
 
+document.getElementById('capture2').style.display = 'none';
 document.getElementById('capture2').addEventListener('click', () => {
     im2 = captureFrame();
     updateImagePlane(scene2, im2)
@@ -81,12 +87,12 @@ function init_three() {
 
     const offscreenCanvas = document.createElement("canvas");
     offscreenCanvas.width = 400;//camera_settings.width;
-    offscreenCanvas.height = 400*camera_settings.aspect_ratio;
+    offscreenCanvas.height = 400 * camera_settings.aspect_ratio;
     offscreenCtx = offscreenCanvas.getContext("2d");
     displacementArrows = new THREE.Group();
 
     nx = 400;
-    ny = nx*camera_settings.aspect_ratio;
+    ny = nx * camera_settings.aspect_ratio;
     nDIC_x = Math.floor(nx / nodeSpacing) - 1; // offset to account for the fact that the grid starts at half a nodeSpacing
     nDIC_y = Math.floor(ny / nodeSpacing) - 1;
     im1 = new Uint8ClampedArray(nx * ny * 4); // rgba
@@ -106,7 +112,7 @@ function init_three() {
         im1[i + 3] = 255;
     }
     let offset = 4; // offset for the displacement in px
-    for (let i = 0; i < nx * ny * 4 - offset*4; i += 4) {
+    for (let i = 0; i < nx * ny * 4 - offset * 4; i += 4) {
         im2[i] = im1[i + offset * 4] || im1[i];
         im2[i + 1] = im1[i + 1 + offset * 4] || im1[i + 1];
         im2[i + 2] = im1[i + 2 + offset * 4] || im1[i + 2];
@@ -179,6 +185,7 @@ async function init_pyodide() {
     pyodide.ready = true;
     let loadingSpan = document.getElementById('loadingSpan');
     loadingSpan.style.display = 'none';
+    document.getElementById('capture2').style.display = 'block';
     return pyodide;
 }
 
