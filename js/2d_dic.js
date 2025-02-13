@@ -167,6 +167,7 @@ function createScene(renderer) {
 function createImagePlane(scene, data, width, height) {
     let texture = new THREE.DataTexture(data, width, height, THREE.RGBAFormat);
     texture.needsUpdate = true;
+    texture.colorSpace = THREE.SRGBColorSpace;
     let geometry = new THREE.PlaneGeometry(width, height);
     let material = new THREE.MeshBasicMaterial({ map: texture });
     let plane = new THREE.Mesh(geometry, material);
